@@ -236,6 +236,11 @@ impl Request {
         self.headers.get_mut(name)
     }
 
+    /// Get a mutable reference to the Headers.
+    pub fn headers_mut(&mut self) -> &mut Headers {
+        &mut self.headers
+    }
+
     /// Remove a header.
     pub fn remove_header(&mut self, name: &HeaderName) -> Option<Vec<HeaderValue>> {
         self.headers.remove(name)
