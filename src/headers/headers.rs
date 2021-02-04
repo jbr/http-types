@@ -113,6 +113,13 @@ impl Headers {
     pub fn values(&self) -> Values<'_> {
         Values::new(self.headers.values())
     }
+
+    /// checks if the exact header is set
+    pub fn contains_ignore_ascii_case(&self, name: impl Into<HeaderName>, value: &str) -> bool {
+        self.get(name)
+            .map(|h| h.iter().any(|v| v.as_str().eq_ignore_ascii_case(value)))
+            .unwrap_or(false)
+    }
 }
 
 impl Index<HeaderName> for Headers {
