@@ -69,6 +69,20 @@ impl Extensions {
             .and_then(|boxed| (boxed as Box<dyn Any>).downcast().ok().map(|boxed| *boxed))
     }
 
+    /// Gets a value from this typemap or populates it with the provided default function.
+    pub fn get_or_insert_with<F, T>(&mut self, default: F) -> &mut T
+    where
+        F: FnOnce() -> T,
+        T: Send + Sync + 'static,
+    {
+        self.map
+            .get_or_insert_with(Default::default)
+            .entry(TypeId::of::<T>())
+            .or_insert_with(|| Box::new(default()))
+            .downcast_mut()
+            .unwrap()
+    }
+
     /// Clear the `Extensions` of all inserted values.
     #[inline]
     pub fn clear(&mut self) {
