@@ -30,6 +30,17 @@ impl<'a, 'b> Header for (&'a str, &'b str) {
     }
 }
 
+impl Header for (&str, String) {
+    fn header_name(&self) -> HeaderName {
+        HeaderName::from(self.0)
+    }
+
+    fn header_value(&self) -> HeaderValue {
+        HeaderValue::from_bytes(self.1.to_owned().into_bytes())
+            .expect("String slice should be valid ASCII")
+    }
+}
+
 impl<'a, T: Header> Header for &'a T {
     fn header_name(&self) -> HeaderName {
         self.deref().header_name()
