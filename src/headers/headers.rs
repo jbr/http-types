@@ -8,7 +8,7 @@ use std::ops::Index;
 use std::str::FromStr;
 
 use crate::headers::{
-    HeaderName, HeaderValues, IntoIter, Iter, IterMut, Names, ToHeaderValues, Values,
+    Header, HeaderName, HeaderValues, IntoIter, Iter, IterMut, Names, ToHeaderValues, Values,
 };
 
 /// A collection of HTTP Headers.
@@ -70,6 +70,11 @@ impl Headers {
                 self.insert(name, values);
             }
         }
+    }
+
+    /// apply a [`typed header`](Header)
+    pub fn apply(&mut self, header: impl Header) {
+        header.apply_header(self)
     }
 
     /// Get a reference to a header.
